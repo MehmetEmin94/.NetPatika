@@ -1,10 +1,18 @@
 ﻿using System;
-namespace todo_app
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace toDoApp
 {
-    public class ConsoleApp{
-        
-        public void Run(){
-            while(true){
+    public class ConsoleApp
+    {
+
+        public void Run()
+        {
+            while (true)
+            {
                 Console.WriteLine("Lütfen yapmak istediğiniz işlemi seçiniz :)\n" +
                                   "*******************************************\n" +
                                   "(1) Board Listelemek/n" +
@@ -13,27 +21,28 @@ namespace todo_app
                                   "(4) Kart Taşımak\n" +
                                   "(5) Cikis");
                 int select = int.Parse(Console.ReadLine());
-                
+
                 if (select == 5)
                 {
-                    return false;
+                    break;
                 }
 
                 switch (select)
                 {
-                    case 1 :
+                    case 1:
                         break;
-                    case 2 :
+                    case 2:
                         break;
-                    case 3 :
+                    case 3:
                         break;
-                    case 4 :
+                    case 4:
                         break;
                     default:
-                        Console.WriteLine("Lutfen gecerli deger giriniz !!")
+                        Console.WriteLine("Lutfen gecerli deger giriniz !!");
+                        break;
                 }
 
-                
+
 
             }
         }

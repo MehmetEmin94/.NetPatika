@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace todo_app
+namespace toDoApp
 {
     class Program
     {

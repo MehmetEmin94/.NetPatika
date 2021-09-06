@@ -1,6 +1,6 @@
 ﻿namespace toDoApp
 {
-    enum Size
+    public enum Size
     {
 
         XS,

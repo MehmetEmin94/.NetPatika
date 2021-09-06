@@ -14,12 +14,18 @@ namespace toDoApp
         private Size size;
 
         public Card() { }
-        public Card(string Header, string Content, int Id)
+
+        public Card(string Header, string Content, int PersonId, Size Sz)
         {
-            this.header = Header;
-            this.content = Content;
-            this.personId = Id;
+            header = Header;
+            content = Content;
+            personId = PersonId;
+            size = Sz;
         }
 
+        public string Header { get => header; set => header = value; }
+        public string Content { get => content; set => content = value; }
+        public int PersonId { get => personId; set => personId = value; }
+        public Size Sz { get => size; set => size = value; }
     }
 }

@@ -8,7 +8,23 @@ namespace toDoApp
 {
     public class TeamMember
     {
-        private int id;
-        private string name;
+        private Dictionary<int, string> team = new Dictionary<int, string>()
+        {
+            {1,"seyfettin"},
+            {2,"burhan"},
+            {3,"ahmet"},
+            {4,"gokturk"},
+            {5,"bora"},
+            {6,"halit"}
+        };
+
+        public TeamMember(){}
+        public Dictionary<int, string> Team {get => team;}
+        public void addTeamMember(int id,string name)
+        {
+            team.Add(id, name);
+        }
+
+        
     }
 }

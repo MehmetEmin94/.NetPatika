@@ -21,6 +21,8 @@ namespace WebApi.BookOperations.GetBook
         public BookViewModel Handle(int id)
         {
             var item=BooksView(id);
+            if(item is null)
+                throw new ArgumentNullException("Item is not exist !");
             BookViewModel viewModel = new BookViewModel()
                 {
                     Title = item.Title,

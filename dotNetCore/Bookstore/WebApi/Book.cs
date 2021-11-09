@@ -11,6 +11,8 @@ namespace WebApi
         public string Title { get; set; }
 
         public int GenreId { get; set; }
+        [ForeignKey("GenreId")]
+        public Genre Genre { get; set; }
 
         public int PageCount { get; set; }
 

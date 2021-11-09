@@ -3,6 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 using WebApi.DbOperations;
+using WebApi.BookOperations.GetBooks;
+using WebApi.BookOperations.CreateBook;
+using WebApi.BookOperations.QueryModels;
+using WebApi.BookOperations.UpdateBook;
+using WebApi.BookOperations.GetBook;
+using WebApi.BookOperations.DeleteBook;
 
 namespace WebApi.Controllers
 {
@@ -10,47 +16,77 @@ namespace WebApi.Controllers
     [Route("[controller]s")]
     public class BookController:ControllerBase
     {
-        private readonly BookStoreDbContext _context;
-        public BookController(BookStoreDbContext context)
+        private readonly IGetBooksQuery _getBooksQuery;
+        private readonly IGetBookByIdQuery _getBookByIdQuery;
+        private readonly ICreateBookCommand _createBookCommand;
+        private readonly IUpdateBookCommand _updateBookCommand;
+        private readonly IDeleteBookCommand _deleteBookCommand;
+        public BookController(IDeleteBookCommand deleteBookCommand,IGetBooksQuery getBooksQuery, ICreateBookCommand createBookCommand
+            , IUpdateBookCommand updateBookCommand, IGetBookByIdQuery getBookByIdQuery)
         {
-            _context=context;
+            _deleteBookCommand = deleteBookCommand;
+            _getBooksQuery = getBooksQuery;
+            _createBookCommand = createBookCommand;
+            _updateBookCommand = updateBookCommand;
+            _getBookByIdQuery = getBookByIdQuery;
         }
 
         [HttpGet]
-        public List<Book> GetBooks()
+        public IActionResult GetBooks()
         {
-            var bookList=_context.Books.OrderBy(b=>b.Id).ToList();
-            return bookList;
+            var bookList = _getBooksQuery.Handle();
+            return Ok(bookList);
         }
 
         [HttpGet("{id}")]
-        public Book GetByBookId(int id)
+        public IActionResult GetByBookId(int id)
         {
-            var book=_context.Books.FirstOrDefault(b=>b.Id==id);
-            return book;
+            var book=_getBookByIdQuery.Handle(id);
+            return Ok(book);
         }
         
         [HttpPost]
-        public IActionResult Create(Book book)
+        public IActionResult Create([FromBody] BookInsertModel book)
         {
-            _context.Books.Add(book);
-            _context.SaveChanges();
+            try
+            {
+                _createBookCommand.Handle(book);
+            }
+            catch (Exception ex) 
+            {
+                return BadRequest(ex.Message);
+            }
+            
             return Ok();
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            _context.Books.Remove(_context.Books.FirstOrDefault(b=>b.Id==id));
-            _context.SaveChanges();
+            try
+            {
+                _deleteBookCommand.Handle(id);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
             return Ok();
         }
 
-        [HttpPut]
-        public IActionResult Update([FromBody] Book book)
+        [HttpPut("{id}")]
+        public IActionResult Update(int id,[FromBody] BookInsertModel book)
         {
-            _context.Books.Update(_context.Books.FirstOrDefault(b=>b.Id==book.Id));
-            _context.SaveChanges();
+
+            try
+            {
+                _updateBookCommand.Handle(id,book);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
             return Ok();
         }
     }

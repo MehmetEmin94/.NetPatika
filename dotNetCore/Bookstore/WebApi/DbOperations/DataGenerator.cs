@@ -10,7 +10,7 @@ namespace WebApi.DbOperations
     {
         public static void Initialize(IServiceProvider serviceProvider)
         {
-            using(var context=new BookStoreDbContext(serviceProvider.GetRequiredService<DbContextOptions<BookStoreDbContext>>()))
+            using(var context=new InMemoryDbContext(serviceProvider.GetRequiredService<DbContextOptions<InMemoryDbContext>>()))
             {
                 if (context.Books.Any())
                 {
@@ -21,6 +21,17 @@ namespace WebApi.DbOperations
                    new Book{Title="Dune",GenreId=1,PageCount=600,PublishDate=new DateTime(1980,10,10)},
                    new Book{Title="Hobbit",GenreId=2,PageCount=800,PublishDate=new DateTime(1995,10,10)},
                    new Book{Title="Clean Code",GenreId=3,PageCount=462,PublishDate=new DateTime(2008,01,01)}
+                );
+
+                if (context.Genres.Any())
+                {
+                    return;
+                }
+                context.Genres.AddRange
+                (
+                   new Genre { Title = "Science fiction" },
+                   new Genre { Title = "Fantastic" },
+                   new Genre { Title = "Clean Code" }
                 );
                 context.SaveChanges();
             }

@@ -13,6 +13,11 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using WebApi.DbOperations;
 using Microsoft.EntityFrameworkCore;
+using WebApi.BookOperations.GetBooks;
+using WebApi.BookOperations.CreateBook;
+using WebApi.BookOperations.UpdateBook;
+using WebApi.BookOperations.GetBook;
+using WebApi.BookOperations.DeleteBook;
 
 namespace WebApi
 {
@@ -34,7 +39,12 @@ namespace WebApi
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApi", Version = "v1" });
             });
-            services.AddDbContext<BookStoreDbContext>(options=>options.UseInMemoryDatabase(databaseName:"BookStoreDb"));
+            services.AddScoped<IGetBookByIdQuery, GetBookByIdQuery>(); 
+            services.AddScoped<IGetBooksQuery, GetBooksQuery>();
+            services.AddScoped<ICreateBookCommand, CreateBookCommand>();
+            services.AddScoped<IUpdateBookCommand, UpdateBookCommand>();
+            services.AddScoped<IDeleteBookCommand, DeleteBookCommand>();
+            services.AddDbContext<InMemoryDbContext>(options=>options.UseInMemoryDatabase(databaseName:"BookStoreDb"));
 
         }
 

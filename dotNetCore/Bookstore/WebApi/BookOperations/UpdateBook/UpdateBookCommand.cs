@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,25 +11,23 @@ namespace WebApi.BookOperations.UpdateBook
     public class UpdateBookCommand: IUpdateBookCommand
     {
         private readonly InMemoryDbContext _dbContext;
+        private readonly IMapper _mapper;
 
-        public UpdateBookCommand(InMemoryDbContext dbContext)
+        public UpdateBookCommand(InMemoryDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
+            _mapper = mapper;
         }
 
-        public void Handle(int id, BookInsertModel book)
+        public void Handle(BookUpdateModel book)
         {
-            var item = _dbContext.Books.SingleOrDefault(b => b.Id == id);
+            var item = _dbContext.Books.SingleOrDefault(b => b.Id == book.Id);
             if (item is null)
                 throw new ArgumentNullException("Item is not exist !");
 
             _dbContext.Remove(item);
-            item = new Book();
-            item.Id = id;
-            item.Title = book.Title;
-            item.PageCount = book.PageCount;
-            item.GenreId = book.GenreId;
-            item.PublishDate = book.PublishDate;
+            item = _mapper.Map<Book>(book);
+            
             _dbContext.Books.Add(item);
             _dbContext.SaveChanges();
         }

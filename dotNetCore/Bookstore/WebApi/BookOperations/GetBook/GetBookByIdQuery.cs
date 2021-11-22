@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -12,10 +13,12 @@ namespace WebApi.BookOperations.GetBook
     public class GetBookByIdQuery: IGetBookByIdQuery
     {
         private readonly InMemoryDbContext _dbContext;
+        private readonly IMapper _mapper;
 
-        public GetBookByIdQuery(InMemoryDbContext dbContext)
+        public GetBookByIdQuery(InMemoryDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
+            _mapper = mapper;
         }
 
         public BookViewModel Handle(int id)
@@ -23,14 +26,8 @@ namespace WebApi.BookOperations.GetBook
             var item=BooksView(id);
             if(item is null)
                 throw new ArgumentNullException("Item is not exist !");
-            BookViewModel viewModel = new BookViewModel()
-                {
-                    Title = item.Title,
-                    PageCount = item.PageCount,
-                    PublishDate = item.PublishDate,
-                    GenreTitle = item.GenreTitle
-                };
-            
+
+            var viewModel = _mapper.Map<BookViewModel>(item);
             return viewModel;
         }
         public BookViewDto BooksView(int id)

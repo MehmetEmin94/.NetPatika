@@ -8,6 +8,6 @@ namespace WebApi.BookOperations.UpdateBook
 {
     public interface IUpdateBookCommand
     {
-        void Handle(int id,BookInsertModel book);
+        void Handle(BookUpdateModel book);
     }
 }

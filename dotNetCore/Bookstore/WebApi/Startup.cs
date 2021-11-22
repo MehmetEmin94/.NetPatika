@@ -44,6 +44,7 @@ namespace WebApi
             });
             services.AddScoped<IGetBookByIdQuery, GetBookByIdQuery>();
             services.AddScoped<AbstractValidator<BookInsertModel>, CreateBookCommandValidator>();
+            services.AddScoped<AbstractValidator<BookUpdateModel>, UpdateBookCommandValidator>();
             services.AddScoped<AbstractValidator<int>,DeleteBookCommandValidator>();
             services.AddScoped<IGetBooksQuery, GetBooksQuery>();
             services.AddScoped<ICreateBookCommand, CreateBookCommand>();

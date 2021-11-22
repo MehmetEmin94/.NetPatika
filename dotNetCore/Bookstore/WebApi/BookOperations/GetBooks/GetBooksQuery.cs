@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -12,10 +13,12 @@ namespace WebApi.BookOperations.GetBooks
     public class GetBooksQuery: IGetBooksQuery
     {
         private readonly InMemoryDbContext _dbContext;
+        private readonly IMapper _mapper;
 
-        public GetBooksQuery(InMemoryDbContext dbContext)
+        public GetBooksQuery(InMemoryDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
+            _mapper = mapper;
         }
 
         public List<BookViewModel> Handle()
@@ -23,13 +26,8 @@ namespace WebApi.BookOperations.GetBooks
             List<BookViewModel> viewModels = new List<BookViewModel>();
             foreach(var item in BooksView())
             {
-                viewModels.Add(new BookViewModel()
-                {
-                    Title = item.Title,
-                    PageCount=item.PageCount,
-                    PublishDate=item.PublishDate,
-                    GenreTitle=item.GenreTitle
-                });
+                var viewModel = _mapper.Map<BookViewModel>(item);
+                viewModels.Add(viewModel);
             }
             return viewModels;
         }

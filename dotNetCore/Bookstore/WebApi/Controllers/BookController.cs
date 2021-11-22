@@ -24,8 +24,11 @@ namespace WebApi.Controllers
         private readonly IDeleteBookCommand _deleteBookCommand;
         private readonly AbstractValidator<BookInsertModel> _validateInsert;
         private readonly AbstractValidator<int> _validateById;
+        private readonly AbstractValidator<BookUpdateModel> _validateUpdate;
+
         public BookController(IDeleteBookCommand deleteBookCommand,IGetBooksQuery getBooksQuery, ICreateBookCommand createBookCommand
-            , IUpdateBookCommand updateBookCommand, IGetBookByIdQuery getBookByIdQuery, AbstractValidator<BookInsertModel> validateInsert, AbstractValidator<int> validateById)
+            , IUpdateBookCommand updateBookCommand, IGetBookByIdQuery getBookByIdQuery, AbstractValidator<BookInsertModel> validateInsert,
+            AbstractValidator<int> validateById, AbstractValidator<BookUpdateModel> validateUpdate)
         {
             _deleteBookCommand = deleteBookCommand;
             _getBooksQuery = getBooksQuery;
@@ -34,6 +37,7 @@ namespace WebApi.Controllers
             _getBookByIdQuery = getBookByIdQuery;
             _validateInsert = validateInsert;
             _validateById = validateById;
+            _validateUpdate = validateUpdate;
         }
 
         [HttpGet]
@@ -99,15 +103,14 @@ namespace WebApi.Controllers
             return Ok();
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Update(int id,[FromBody] BookInsertModel book)
+        [HttpPut]
+        public IActionResult Update([FromBody] BookUpdateModel book)
         {
 
             try
             {
-                _validateById.ValidateAndThrow(id);
-                _validateInsert.ValidateAndThrow(book);
-                _updateBookCommand.Handle(id,book);
+                _validateUpdate.ValidateAndThrow(book);
+                _updateBookCommand.Handle(book);
             }
             catch (Exception ex)
             {

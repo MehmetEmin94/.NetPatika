@@ -9,6 +9,7 @@ using WebApi.BookOperations.QueryModels;
 using WebApi.BookOperations.UpdateBook;
 using WebApi.BookOperations.GetBook;
 using WebApi.BookOperations.DeleteBook;
+using FluentValidation;
 
 namespace WebApi.Controllers
 {
@@ -21,14 +22,18 @@ namespace WebApi.Controllers
         private readonly ICreateBookCommand _createBookCommand;
         private readonly IUpdateBookCommand _updateBookCommand;
         private readonly IDeleteBookCommand _deleteBookCommand;
+        private readonly AbstractValidator<BookInsertModel> _validateInsert;
+        private readonly AbstractValidator<int> _validateById;
         public BookController(IDeleteBookCommand deleteBookCommand,IGetBooksQuery getBooksQuery, ICreateBookCommand createBookCommand
-            , IUpdateBookCommand updateBookCommand, IGetBookByIdQuery getBookByIdQuery)
+            , IUpdateBookCommand updateBookCommand, IGetBookByIdQuery getBookByIdQuery, AbstractValidator<BookInsertModel> validateInsert, AbstractValidator<int> validateById)
         {
             _deleteBookCommand = deleteBookCommand;
             _getBooksQuery = getBooksQuery;
             _createBookCommand = createBookCommand;
             _updateBookCommand = updateBookCommand;
             _getBookByIdQuery = getBookByIdQuery;
+            _validateInsert = validateInsert;
+            _validateById = validateById;
         }
 
         [HttpGet]
@@ -44,7 +49,8 @@ namespace WebApi.Controllers
            
             try
             {
-               _getBookByIdQuery.Handle(id);
+                _validateById.ValidateAndThrow(id);
+                _getBookByIdQuery.Handle(id);
             }
             catch (Exception ex)
             {
@@ -59,6 +65,15 @@ namespace WebApi.Controllers
         {
             try
             {
+                _validateInsert.ValidateAndThrow(book);
+                
+                //if (!result.IsValid) 
+                //{
+                //    foreach (var item in result.Errors) 
+                //    {
+                //        Console.WriteLine("Property "+item.PropertyName+" -- Error Message : "+item.ErrorMessage);
+                //    }
+                //}
                 _createBookCommand.Handle(book);
             }
             catch (Exception ex) 
@@ -74,6 +89,7 @@ namespace WebApi.Controllers
         {
             try
             {
+                _validateById.ValidateAndThrow(id);
                 _deleteBookCommand.Handle(id);
             }
             catch (Exception ex)
@@ -89,6 +105,8 @@ namespace WebApi.Controllers
 
             try
             {
+                _validateById.ValidateAndThrow(id);
+                _validateInsert.ValidateAndThrow(book);
                 _updateBookCommand.Handle(id,book);
             }
             catch (Exception ex)

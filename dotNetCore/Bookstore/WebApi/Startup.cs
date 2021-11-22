@@ -18,6 +18,9 @@ using WebApi.BookOperations.CreateBook;
 using WebApi.BookOperations.UpdateBook;
 using WebApi.BookOperations.GetBook;
 using WebApi.BookOperations.DeleteBook;
+using System.Reflection;
+using FluentValidation;
+using WebApi.BookOperations.QueryModels;
 
 namespace WebApi
 {
@@ -39,12 +42,15 @@ namespace WebApi
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApi", Version = "v1" });
             });
-            services.AddScoped<IGetBookByIdQuery, GetBookByIdQuery>(); 
+            services.AddScoped<IGetBookByIdQuery, GetBookByIdQuery>();
+            services.AddScoped<AbstractValidator<BookInsertModel>, CreateBookCommandValidator>();
+            services.AddScoped<AbstractValidator<int>,DeleteBookCommandValidator>();
             services.AddScoped<IGetBooksQuery, GetBooksQuery>();
             services.AddScoped<ICreateBookCommand, CreateBookCommand>();
             services.AddScoped<IUpdateBookCommand, UpdateBookCommand>();
             services.AddScoped<IDeleteBookCommand, DeleteBookCommand>();
             services.AddDbContext<InMemoryDbContext>(options=>options.UseInMemoryDatabase(databaseName:"BookStoreDb"));
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
         }
 

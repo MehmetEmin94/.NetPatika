@@ -8,6 +8,6 @@ namespace WebApi.BookOperations.CreateBook
 {
     public interface ICreateBookCommand
     {
-        void Handle(BookInsertModel bookInsertModel);
+        void Handle(BookInsertModel book);
     }
 }

@@ -32,14 +32,12 @@ namespace WebApi.BookOperations.GetBook
         }
         public BookViewDto BooksView(int id)
         {
-            using (_dbContext)
-            {
                 var result = from b in _dbContext.Books.Where(b=>b.Id==id)
                              join g in _dbContext.Genres
                              on b.GenreId equals g.Id
                              select new BookViewDto { Title = b.Title, PageCount = b.PageCount, PublishDate = b.PublishDate.ToString("dd/mm/yyyy"), GenreTitle = g.Title };
                 return result.Single();
-            }
+            
         }
     }
 }

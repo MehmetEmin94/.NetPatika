@@ -21,6 +21,7 @@ using WebApi.BookOperations.DeleteBook;
 using System.Reflection;
 using FluentValidation;
 using WebApi.BookOperations.QueryModels;
+using WebApi.Middlewares;
 
 namespace WebApi
 {
@@ -70,6 +71,8 @@ namespace WebApi
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseCustomExceptionMiddle();
 
             app.UseEndpoints(endpoints =>
             {

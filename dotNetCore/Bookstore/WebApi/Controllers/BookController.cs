@@ -51,15 +51,7 @@ namespace WebApi.Controllers
         public IActionResult GetByBookId(int id)
         {
            
-            try
-            {
                 _validateById.ValidateAndThrow(id);
-                _getBookByIdQuery.Handle(id);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
             var book = _getBookByIdQuery.Handle(id);
             return Ok(book);
         }
@@ -67,8 +59,6 @@ namespace WebApi.Controllers
         [HttpPost]
         public IActionResult Create([FromBody] BookInsertModel book)
         {
-            try
-            {
                 _validateInsert.ValidateAndThrow(book);
                 
                 //if (!result.IsValid) 
@@ -79,11 +69,6 @@ namespace WebApi.Controllers
                 //    }
                 //}
                 _createBookCommand.Handle(book);
-            }
-            catch (Exception ex) 
-            {
-                return BadRequest(ex.Message);
-            }
             
             return Ok();
         }
@@ -91,32 +76,19 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            try
-            {
                 _validateById.ValidateAndThrow(id);
                 _deleteBookCommand.Handle(id);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
             return Ok();
         }
 
-        [HttpPut]
-        public IActionResult Update([FromBody] BookUpdateModel book)
+        [HttpPut("{id}")]
+        public IActionResult Update(int id,[FromBody] BookInsertModel book)
         {
-
-            try
-            {
-                _validateUpdate.ValidateAndThrow(book);
-                _updateBookCommand.Handle(book);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-
+            BookUpdateModel bookUpdate = new BookUpdateModel { Id = id, GenreId = book.GenreId, PublishDate = book.PublishDate, PageCount = book.PageCount, Title = book.Title };
+           
+                _validateUpdate.ValidateAndThrow(bookUpdate);
+                _updateBookCommand.Handle(bookUpdate);
+            
             return Ok();
         }
     }

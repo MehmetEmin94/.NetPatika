@@ -22,6 +22,7 @@ using System.Reflection;
 using FluentValidation;
 using WebApi.BookOperations.QueryModels;
 using WebApi.Middlewares;
+using WebApi.Services;
 
 namespace WebApi
 {
@@ -43,6 +44,8 @@ namespace WebApi
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApi", Version = "v1" });
             });
+
+            services.AddSingleton<ILoggerService,ConsoleLogger>();
             services.AddScoped<IGetBookByIdQuery, GetBookByIdQuery>();
             services.AddScoped<AbstractValidator<BookInsertModel>, CreateBookCommandValidator>();
             services.AddScoped<AbstractValidator<BookUpdateModel>, UpdateBookCommandValidator>();

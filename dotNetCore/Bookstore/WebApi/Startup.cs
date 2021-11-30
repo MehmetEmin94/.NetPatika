@@ -13,16 +13,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using WebApi.DbOperations;
 using Microsoft.EntityFrameworkCore;
-using WebApi.BookOperations.GetBooks;
-using WebApi.BookOperations.CreateBook;
-using WebApi.BookOperations.UpdateBook;
-using WebApi.BookOperations.GetBook;
-using WebApi.BookOperations.DeleteBook;
 using System.Reflection;
-using FluentValidation;
-using WebApi.BookOperations.QueryModels;
-using WebApi.Middlewares;
-using WebApi.Services;
+using WebApi.Extensions;
 
 namespace WebApi
 {
@@ -45,15 +37,8 @@ namespace WebApi
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApi", Version = "v1" });
             });
 
-            services.AddSingleton<ILoggerService,ConsoleLogger>();
-            services.AddScoped<IGetBookByIdQuery, GetBookByIdQuery>();
-            services.AddScoped<AbstractValidator<BookInsertModel>, CreateBookCommandValidator>();
-            services.AddScoped<AbstractValidator<BookUpdateModel>, UpdateBookCommandValidator>();
-            services.AddScoped<AbstractValidator<int>,DeleteBookCommandValidator>();
-            services.AddScoped<IGetBooksQuery, GetBooksQuery>();
-            services.AddScoped<ICreateBookCommand, CreateBookCommand>();
-            services.AddScoped<IUpdateBookCommand, UpdateBookCommand>();
-            services.AddScoped<IDeleteBookCommand, DeleteBookCommand>();
+            services.AddDependencyInjections();
+
             services.AddDbContext<InMemoryDbContext>(options=>options.UseInMemoryDatabase(databaseName:"BookStoreDb"));
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 

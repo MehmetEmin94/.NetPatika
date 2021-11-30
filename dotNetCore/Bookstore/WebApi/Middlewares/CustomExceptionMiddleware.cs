@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -53,13 +52,6 @@ namespace WebApi.Middlewares
             var result = JsonConvert.SerializeObject(
                 new { error = e.Message }, Formatting.None);
             return context.Response.WriteAsync(result);
-        }
-    }
-    public static class CustomExceptionMiddlewareExtension
-    {
-        public static IApplicationBuilder UseCustomExceptionMiddle(this IApplicationBuilder applicationBuilder)
-        {
-            return applicationBuilder.UseMiddleware<CustomExceptionMiddleware>();
         }
     }
 }
